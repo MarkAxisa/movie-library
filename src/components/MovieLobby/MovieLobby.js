@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Carousel from '../MovieCarousel/Carousel';
+import SearchWidget from './../SearchWidget/SearchWidget';
 
 const useStyles = makeStyles(() => ({
 	lobby: {
@@ -26,11 +27,21 @@ const MovieLobby = () => {
         .catch(console.log)
 	}, [])
 
+	const types = {
+		popular: 'popular',
+		latest: 'latest',
+		nowPlaying: 'now_playing',
+		topRated: 'top_rated',
+		upcoming: 'upcoming'
+	}
+
 	const classes = useStyles();
 	return (
 		<div className={classes.lobby}>
-			<Carousel config={config}/>
-			<Carousel config={config}/>
+			<Carousel config={config} type={types.popular}/>
+			<Carousel config={config} type={types.nowPlaying}/>
+			<Carousel config={config} type={types.topRated}/>
+			<Carousel config={config} type={types.upcoming}/>
 		</div>
 	);
 }

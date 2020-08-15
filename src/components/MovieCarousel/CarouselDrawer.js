@@ -4,6 +4,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import { CarouselContext } from './Carousel';
 import {isMobile} from 'react-device-detect';
+import placeholder from '../../assets/images/placeholderImage.jpg';
 
 const CarouselDrawer = ({selectedMovie, apiConfig, onClick}) => {
 
@@ -12,7 +13,7 @@ const CarouselDrawer = ({selectedMovie, apiConfig, onClick}) => {
 	const useStyles = makeStyles(() => ({
 		drawer: {
 			height: '100%',
-			display: 'flex'
+			display: 'flex',
 		},
 		drawerInfo: {
 			height: '100%',
@@ -26,7 +27,7 @@ const CarouselDrawer = ({selectedMovie, apiConfig, onClick}) => {
 			height: '100%',
 			right: '0',
 			width: isMobile ? '100%' :'65%',
-			backgroundImage: selectedMovie ? `url(${apiConfig.baseUrl}w1280${imagePath})` : '',
+			backgroundImage: selectedMovie ? `url(${apiConfig.baseUrl}w1280${imagePath}), url(${placeholder})` : '',
 			backgroundRepeat: 'no-repeat',
 			position: 'absolute',
 			backgroundPosition: 'center',

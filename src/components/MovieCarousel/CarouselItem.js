@@ -5,6 +5,7 @@ import { useState, useEffect} from 'react'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import IconButton from '@material-ui/core/IconButton';
 import { CarouselContext } from './Carousel';
+import placeholder from '../../assets/images/placeholderImage.jpg';
 
 const CarouselItem = ({movie, config, toggleDrawer}) => {
 	const [selected, setSelected] = useState(false);
@@ -47,7 +48,8 @@ const CarouselItem = ({movie, config, toggleDrawer}) => {
 			textOverflow: 'ellipsis',
 			opacity: '0',
 			zIndex: '100',
-			transition: 'opacity .25s ease-in-out'
+			transition: 'opacity .25s ease-in-out',
+			maxWidth: '18em'
 		},
 		drawerIcon: {
 			position: 'absolute',
@@ -109,7 +111,7 @@ const CarouselItem = ({movie, config, toggleDrawer}) => {
 	const render = !isMobile ? (
 		<div className={classes.carouselItem} >
 			<div className={classes.overlay}></div>
-			<img className={classes.carouselImage} src={config.baseUrl + 'w500' + movie.backdrop_path}></img>
+			<img className={classes.carouselImage} src={config.baseUrl + 'w500' + movie.backdrop_path} onError={(e)=>{e.target.onerror = null; e.target.src=placeholder}} />
 			<p className={classes.title}>{movie.title}</p>
 			<IconButton edge='start' className={classes.drawerIcon} color='inherit' onClick={handleClick} aria-label='menu'>
 				<KeyboardArrowDownIcon/>

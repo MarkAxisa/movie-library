@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useReducer, useRef } from 'react'
-import {BrowserView, MobileView, isMobile} from 'react-device-detect';
+import {isMobile} from 'react-device-detect';
 import { makeStyles } from '@material-ui/core/styles';
 import CarouselItem from './CarouselItem';
 import CarouselButton from './CarouselButton';
@@ -7,6 +7,7 @@ import useSizeElement from './useElementSize';
 import useSliding from './useSliding';
 import useToggleDrawer from './useToggleDrawer';
 import CarouselDrawer from './CarouselDrawer';
+import useFetchMedia from './useFetchMedia';
 
 export const CarouselContext = React.createContext();
 
@@ -31,7 +32,7 @@ const reducer = (state, action) => {
 	}
 }
 
-const Carousel = ({config}) => {
+const Carousel = ({config, type}) => {
 
 	const useStyles = makeStyles(() => ({
 		carouselContainer: {
@@ -43,7 +44,7 @@ const Carousel = ({config}) => {
 		carousel: {
 			display: 'flex',
 			background: '#000',
-			padding: '1em 0',
+			padding: isMobile ? '1em 0' : '1.7em 0',
 			transition: 'transform 300ms ease 100ms',
 			overflowX: isMobile ? 'scroll': 'visible',
 			overflowY: isMobile ? 'hidden': 'visible',
@@ -92,6 +93,7 @@ const Carousel = ({config}) => {
 	const [isFirstLoad, setIsFirstLoad] = useState(true);
 
 	const { width, elementRef } = useSizeElement();
+	const { handleFetchMoviesByType } = useFetchMedia();
 	const { handleToggle, open, selectedMovie } = useToggleDrawer();
 	const {
 		handlePrev,
@@ -104,22 +106,20 @@ const Carousel = ({config}) => {
 	const carouselRef = useRef(null)
 	const classes = useStyles();
 
-	const handleFetchMovies = () => {
-		fetch('https://api.themoviedb.org/3/movie/popular?api_key=f22de4bcfe9ad240a4bdeb99b1c5b637&language=en-US&page=1')
-        .then(res => res.json())
-        .then((data) => {
-          setMovies(data.results.slice(0, 20))
-        })
-        .catch(console.log)
-	}
-
 	const handleCarouselFocus = () => {
 		window.scrollTo(0, carouselRef.current.offsetTop);
 	}
 
 	useEffect(() => {
 		if(!movies.length) {
-			handleFetchMovies();
+			handleFetchMoviesByType(type)
+			.then(res => res.json())
+			.then((data) => {
+				//Shuffling of Movies
+				let movies = data.results.slice(0, 20).sort(() => Math.random() - 0.5);
+				setMovies(movies);
+			})
+			.catch(console.log);
 		}
 		if(state.drawerClosed && !isFirstLoad) {
 			handleCarouselFocus();

@@ -3,9 +3,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import SearchButton from './../SearchWidget/SearchButton';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Navbar() {
+const Navbar = ({handleSearchButtonClick}) => {
   const classes = useStyles();
 
   return (
@@ -38,7 +38,7 @@ function Navbar() {
 		<Typography variant="h6" className={classes.title}>
             Media Library
           </Typography>
-          <Button color="inherit">Login</Button>
+          <SearchButton handleSearchButtonClick={handleSearchButtonClick}/>
         </Toolbar>
       </AppBar>
     </div>
