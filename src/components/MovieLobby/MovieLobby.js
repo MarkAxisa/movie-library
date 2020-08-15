@@ -29,11 +29,8 @@ const MovieLobby = () => {
 	const classes = useStyles();
 	return (
 		<div className={classes.lobby}>
-			Movie Lobby
 			<Carousel config={config}/>
-			New Movies
 			<Carousel config={config}/>
-
 		</div>
 	);
 }

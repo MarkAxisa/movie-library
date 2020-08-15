@@ -1,46 +1,129 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import {isMobile} from 'react-device-detect';
+import { useState, useEffect} from 'react'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-
-const useStyles = makeStyles((theme) => ({
-	carouselItem: {
-		position: 'relative',
-		cursor: 'pointer'
-	},
-	carouselImage: {
-		width: '100%'
-	},
-	title: {
-		position: 'absolute',
-		marginTop: '-2em',
-		textAlign: 'center',
-		left: '0',
-		right: '0',
-		backgroundColor: 'rgba(131,16,16,0.5)',
-		padding: '4px',
-		textOverflow: 'ellipsis',
-		whiteSpace: 'nowrap',
-		overflow: 'hidden',
-
-	},
-	drawerIcon: {
-		position: 'absolute',
-		left: '0',
-		right: '0',
-		margin: 'auto',
-		bottom: '0.5em',
-	}
-}));
+import IconButton from '@material-ui/core/IconButton';
+import { CarouselContext } from './Carousel';
 
 const CarouselItem = ({movie, config, toggleDrawer}) => {
+	const [selected, setSelected] = useState(false);
+	const [lastSelected, setlastSelected] = useState(false);
+
+	const {state, dispatch} = useContext(CarouselContext);
+
+	const useStyles = makeStyles(() => ({
+		carouselItem: {
+			position: 'relative',
+			cursor: 'pointer',
+			pointerEvents: !state.drawerClosed && selected ? 'none' : 'all',
+			"&:hover": {
+				"& $drawerIcon": {
+					opacity: '1'
+				},
+				"& $overlay": {
+					opacity: '0.7'
+				},
+				"& $title": {
+					opacity: '1'
+				}
+			}
+		},
+		carouselImage: {
+			width: '100%',
+			outline: !state.drawerClosed && selected ? '5px solid #fff' : 'none',
+			outlineOffset: '-5px',
+			borderRadius: isMobile ? '0.2em': '0'
+		},
+		title: {
+			left: '0',
+			top: '0',
+			padding: '0.1em 0.5em',
+			margin: '0',
+			overflow: 'hidden',
+			position: 'absolute',
+			textAlign: 'center',
+			whiteSpace: 'nowrap',
+			textOverflow: 'ellipsis',
+			opacity: '0',
+			zIndex: '100',
+			transition: 'opacity .25s ease-in-out'
+		},
+		drawerIcon: {
+			position: 'absolute',
+			left: '0',
+			right: '0',
+			margin: 'auto',
+			bottom: '0',
+			padding: '0',
+			opacity: '0',
+			zIndex: '100',
+			transition: 'opacity .25s ease-in-out',
+			'& svg': {
+				fontSize: '2em'
+			}
+		},
+		overlay: {
+			width: '100%',
+			height: '100%',
+			background: '#000',
+			opacity: '0',
+			position: 'absolute',
+			zIndex: '99',
+			transition: 'opacity .5s ease-in-out'
+		},
+		pointer: {
+			width: '0',
+			height: '0', 
+			borderLeft: '20px solid transparent',
+			borderRight: '20px solid transparent',
+			borderTop: '20px solid #fff',
+			margin: 'auto',
+			bottom: '-1em',
+			left: '0',
+			right: '0',
+			width: '0.1em',
+			position: 'absolute',
+			opacity: '0',
+			opacity: !state.drawerClosed && selected ? '1' : '0'
+		}
+	}));
+
 	const classes = useStyles();
+
+	useEffect(() => {
+		if(state.drawerClosed || !lastSelected) {
+			setSelected(false);
+		}
+		setlastSelected(false);
+	}, [state.drawerClosed, state.elementSelected, state.elementSelected ]);
+
+	const handleClick = () => {
+		setSelected(true);
+		setlastSelected(true);
+		dispatch({type: 'UPDATE_DRAWER_STATE', data: false});
+		dispatch({type: 'UPDATE_SELECTED_STATE', data: !state.elementSelected});
+		toggleDrawer(movie);
+	}
+
+	const render = !isMobile ? (
+		<div className={classes.carouselItem} >
+			<div className={classes.overlay}></div>
+			<img className={classes.carouselImage} src={config.baseUrl + 'w500' + movie.backdrop_path}></img>
+			<p className={classes.title}>{movie.title}</p>
+			<IconButton edge='start' className={classes.drawerIcon} color='inherit' onClick={handleClick} aria-label='menu'>
+				<KeyboardArrowDownIcon/>
+			</IconButton>
+			<div className={classes.pointer}>
+			</div>
+		</div>) : (
+			<div className={classes.carouselItem} onClick={handleClick}>
+				<img className={classes.carouselImage} src={config.baseUrl + 'w500' + movie.poster_path}></img>
+			</div>
+		)
+
 	return (
-		<div className={classes.carouselItem} onClick={toggleDrawer}>
-			<img class={classes.carouselImage} src={config.baseUrl + "w500" + movie.backdrop_path}></img>
-			{/* <p className={classes.title}>{movie.title}</p> */}
-			<KeyboardArrowDownIcon className={classes.drawerIcon} />
-		</div>
+		render
 	);
 }
 

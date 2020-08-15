@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   toolbar: {
-	background: 'rgba(0,0,0,0.5)',
+	background: 'rgba(0,0,0,0.8)',
     width: '100%',
     zIndex: '99',
     position: 'fixed'

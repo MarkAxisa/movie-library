@@ -1,21 +1,15 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState} from 'react'
 
 const useToggleDrawer = () => {
 	const [open, setOpen] = useState(false);
+	const [selectedMovie, setSelectedMovie] = useState(null);
 
-	const handleToggle = () => {
-		setOpen(true);
+	const handleToggle = (movie) => {
+		setOpen(!open);
+		setSelectedMovie(movie);
 	}
 
-	const drawerAnimation = {
-		
-		style: { 
-			transform: open ? 'scaleY(1)' : 'scaleY(0)',
-			position: open ? 'static' : 'absolute'
-		}
-	};
-
-	return { handleToggle, open, drawerAnimation};
+	return { handleToggle, open, selectedMovie};
 }
 
 export default useToggleDrawer
