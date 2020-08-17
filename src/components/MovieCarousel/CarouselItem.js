@@ -31,7 +31,8 @@ const CarouselItem = ({movie, config, toggleDrawer}) => {
 			}
 		},
 		carouselImage: {
-			width: '100%',
+			width: '200px',
+			minHeight: '300px',
 			outline: !state.drawerClosed && selected ? '5px solid #fff' : 'none',
 			outlineOffset: '-5px',
 			borderRadius: isMobile ? '0.2em': '0'
@@ -49,7 +50,7 @@ const CarouselItem = ({movie, config, toggleDrawer}) => {
 			opacity: '0',
 			zIndex: '100',
 			transition: 'opacity .25s ease-in-out',
-			maxWidth: '18em'
+			maxWidth: '11em'
 		},
 		drawerIcon: {
 			position: 'absolute',
@@ -72,10 +73,9 @@ const CarouselItem = ({movie, config, toggleDrawer}) => {
 			opacity: '0',
 			position: 'absolute',
 			zIndex: '99',
-			transition: 'opacity .5s ease-in-out'
+			transition: 'opacity .7s ease-in-out'
 		},
 		pointer: {
-			width: '0',
 			height: '0', 
 			borderLeft: '20px solid transparent',
 			borderRight: '20px solid transparent',
@@ -86,7 +86,6 @@ const CarouselItem = ({movie, config, toggleDrawer}) => {
 			right: '0',
 			width: '0.1em',
 			position: 'absolute',
-			opacity: '0',
 			opacity: !state.drawerClosed && selected ? '1' : '0'
 		}
 	}));
@@ -98,7 +97,7 @@ const CarouselItem = ({movie, config, toggleDrawer}) => {
 			setSelected(false);
 		}
 		setlastSelected(false);
-	}, [state.drawerClosed, state.elementSelected, state.elementSelected ]);
+	}, [state.drawerClosed, state.elementSelected, state.elementSelected, lastSelected ]);
 
 	const handleClick = () => {
 		setSelected(true);
@@ -111,7 +110,7 @@ const CarouselItem = ({movie, config, toggleDrawer}) => {
 	const render = !isMobile ? (
 		<div className={classes.carouselItem} >
 			<div className={classes.overlay}></div>
-			<img className={classes.carouselImage} src={config.baseUrl + 'w500' + movie.backdrop_path} onError={(e)=>{e.target.onerror = null; e.target.src=placeholder}} />
+			<img className={classes.carouselImage} src={config.baseUrl + 'w500' + movie.poster_path} onError={(e)=>{e.target.onerror = null; e.target.src=placeholder}} alt={movie.title} />
 			<p className={classes.title}>{movie.title}</p>
 			<IconButton edge='start' className={classes.drawerIcon} color='inherit' onClick={handleClick} aria-label='menu'>
 				<KeyboardArrowDownIcon/>
@@ -120,7 +119,7 @@ const CarouselItem = ({movie, config, toggleDrawer}) => {
 			</div>
 		</div>) : (
 			<div className={classes.carouselItem} onClick={handleClick}>
-				<img className={classes.carouselImage} src={config.baseUrl + 'w500' + movie.poster_path}></img>
+				<img className={classes.carouselImage} src={config.baseUrl + 'w500' + movie.poster_path} onError={(e)=>{e.target.onerror = null; e.target.src=placeholder}} alt={movie.title}></img>
 			</div>
 		)
 

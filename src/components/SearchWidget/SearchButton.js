@@ -9,12 +9,12 @@ const useStyles = makeStyles(() => ({
 	},
   }));
 
-const SearchButton = ({handleSearchButtonClick}) => {
+const SearchButton = ({toggleSearch}) => {
 
 	const classes = useStyles();
 	return (
 		<div className={classes.searchContainer}>
-			<IconButton edge='start' color='inherit' onClick={handleSearchButtonClick} aria-label='menu'>
+			<IconButton edge='start' color='inherit' onClick={toggleSearch} aria-label='menu'>
 				<SearchIcon/>
 			</IconButton>
 		</div>

@@ -7,7 +7,7 @@ import useSizeElement from './useElementSize';
 import useSliding from './useSliding';
 import useToggleDrawer from './useToggleDrawer';
 import CarouselDrawer from './CarouselDrawer';
-import useFetchMedia from './useFetchMedia';
+import useFetchMedia from './../useFetchMedia';
 
 export const CarouselContext = React.createContext();
 
@@ -32,30 +32,38 @@ const reducer = (state, action) => {
 	}
 }
 
-const Carousel = ({config, type}) => {
+const Carousel = ({config, type, collection}) => {
 
 	const useStyles = makeStyles(() => ({
 		carouselContainer: {
 			transition: 'transform 300ms ease 100ms',
 			position: 'relative',
 			overflow: 'hidden',
-			width: '100%'
+			width: '100%',
+			padding: isMobile ? '0' : '4em 0',
+			margin: '-4em 0',
+			'&:hover': {
+				zIndex: '100'
+			}
 		},
 		carousel: {
 			display: 'flex',
 			background: '#000',
-			padding: isMobile ? '1em 0' : '1.7em 0',
+			padding: '1em 0',
 			transition: 'transform 300ms ease 100ms',
 			overflowX: isMobile ? 'scroll': 'visible',
 			overflowY: isMobile ? 'hidden': 'visible',
-			minHeight: isMobile ? '5em' : '14em',
-			marginBottom: '-1.1em'
+			minHeight: isMobile ? '5em' : '14em'
 		},
 		initialContainer: {
 			position: 'absolute'
 		},
 		carouselTitle: {
-			margin: '0.5em 0 0 0'
+			margin: '0.5em 0 0 0',
+			position: isMobile ? 'initial' : 'absolute',
+			top: isMobile ? '0' : '1em',
+			zIndex: '100',
+			fontSize: isMobile ? '1em' : '1.5em'
 		},
 		carouselGradient: {
 			position: 'absolute',
@@ -78,11 +86,12 @@ const Carousel = ({config, type}) => {
 			position: state.drawerClosed ? 'absolute' : 'static'
 		},
 		movieContainer: {
-			minWidth: isMobile ? '5em' : '20em',
-			marginRight: isMobile ? '0.4em': '0.1em',
-			transition: 'all 700ms',
+			minWidth: isMobile ? '5em' : '200px',
+			paddingRight: isMobile ? '0.4em': '2px',
+			transitionDelay: state.drawerClosed ? '0.4s' : '0',
+			transition: 'all 500ms',
 			'&:hover': {
-				padding: state.drawerClosed && !isMobile ? '0 calc(20em * 0.25)' : '0',
+				margin: state.drawerClosed && !isMobile ? '0 calc(20em * 0.25)' : '0',
 				transform: state.drawerClosed && !isMobile ? 'scale(1.5)' : 'none'
 			}
 		}
@@ -95,14 +104,6 @@ const Carousel = ({config, type}) => {
 	const { width, elementRef } = useSizeElement();
 	const { handleFetchMoviesByType } = useFetchMedia();
 	const { handleToggle, open, selectedMovie } = useToggleDrawer();
-	const {
-		handlePrev,
-		handleNext,
-		slideAnimation,
-		containerRef,
-		hasNext,
-		hasPrev
-	} = useSliding(width, 19);
 	const carouselRef = useRef(null)
 	const classes = useStyles();
 
@@ -111,7 +112,7 @@ const Carousel = ({config, type}) => {
 	}
 
 	useEffect(() => {
-		if(!movies.length) {
+		if(!movies.length && !collection) {
 			handleFetchMoviesByType(type)
 			.then(res => res.json())
 			.then((data) => {
@@ -121,35 +122,50 @@ const Carousel = ({config, type}) => {
 			})
 			.catch(console.log);
 		}
+
+		if(collection) {
+			setMovies(collection);
+		}
+
 		if(state.drawerClosed && !isFirstLoad) {
 			handleCarouselFocus();
 		}
 		setIsFirstLoad(false);
-	}, [state.drawerClosed])
+	}, [state.drawerClosed, collection])
+	const {
+		handlePrev,
+		handleNext,
+		slideAnimation,
+		containerRef,
+		hasNext,
+		hasPrev
+	} = useSliding(width, movies.length);
 
 
 	return (
 		<div ref={carouselRef} className={classes.carouselContainer}>
-			<p className={classes.carouselTitle}>Latest</p>
-			<CarouselContext.Provider value={{state, dispatch}}>
-				<div ref={containerRef} className={classes.carousel} {...slideAnimation}>
-					<div ref={elementRef} className={[classes.movieContainer, classes.initialContainer].join(' ')}></div>
-					{movies.map((movie) => (
-						<div className={classes.movieContainer}>
-							<CarouselItem key={movie.id} movie={movie} config={config} toggleDrawer={handleToggle}/>
-						</div>
-					))}
-				</div>
-				{!isMobile && <div className={[classes.carouselGradient, classes.carouselGradientRight].join(' ')}>
-					{hasNext && !open && <CarouselButton onClick={handleNext} type="Next"/>}
-				</div>}
-				{!isMobile &&<div className={[classes.carouselGradient, classes.carouselGradientLeft].join(' ')}>
-					{hasPrev && !open && <CarouselButton onClick={handlePrev} type="Prev"/>}
-				</div>}
-				<div className={classes.carouselDrawer} >
-					<CarouselDrawer selectedMovie={selectedMovie} apiConfig={config} onClick={handleToggle} />
-				</div>
-			</CarouselContext.Provider>
+			{!collection && <p className={classes.carouselTitle}>Latest</p>}
+			<div className={classes.carouselInnerContainer}>
+				<CarouselContext.Provider value={{state, dispatch}}>
+					<div ref={containerRef} className={classes.carousel} {...slideAnimation}>
+						<div ref={elementRef} className={[classes.movieContainer, classes.initialContainer].join(' ')}></div>
+						{movies.map((movie) => (
+							<div key={movie.id} className={classes.movieContainer}>
+								<CarouselItem movie={movie} config={config} toggleDrawer={handleToggle}/>
+							</div>
+						))}
+					</div>
+					{!isMobile && !collection &&<div className={[classes.carouselGradient, classes.carouselGradientRight].join(' ')}>
+						{hasNext && !open && !collection && <CarouselButton onClick={handleNext} type="Next"/>}
+					</div>}
+					{!isMobile && !collection && <div className={[classes.carouselGradient, classes.carouselGradientLeft].join(' ')}>
+						{hasPrev && !open && !collection && <CarouselButton onClick={handlePrev} type="Prev"/>}
+					</div>}
+					<div className={classes.carouselDrawer} >
+						<CarouselDrawer selectedMovie={selectedMovie} apiConfig={config} onClick={handleToggle} />
+					</div>
+				</CarouselContext.Provider>
+			</div>
 		</div>
 	);
 }

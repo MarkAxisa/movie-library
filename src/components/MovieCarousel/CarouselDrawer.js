@@ -4,7 +4,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import { CarouselContext } from './Carousel';
 import {isMobile} from 'react-device-detect';
-import placeholder from '../../assets/images/placeholderImage.jpg';
+import placeholder from '../../assets/images/drawerPlaceholder.jpg';
 
 const CarouselDrawer = ({selectedMovie, apiConfig, onClick}) => {
 
