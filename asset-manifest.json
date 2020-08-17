@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/movie-library/static/css/main.fb05ca73.chunk.css",
+    "main.js": "/movie-library/static/js/main.ee349bd5.chunk.js",
+    "main.js.map": "/movie-library/static/js/main.ee349bd5.chunk.js.map",
+    "runtime-main.js": "/movie-library/static/js/runtime-main.cba2209a.js",
+    "runtime-main.js.map": "/movie-library/static/js/runtime-main.cba2209a.js.map",
+    "static/js/2.368c714f.chunk.js": "/movie-library/static/js/2.368c714f.chunk.js",
+    "static/js/2.368c714f.chunk.js.map": "/movie-library/static/js/2.368c714f.chunk.js.map",
+    "index.html": "/movie-library/index.html",
+    "precache-manifest.7c028f0a3617b393d7e162d03607b6aa.js": "/movie-library/precache-manifest.7c028f0a3617b393d7e162d03607b6aa.js",
+    "service-worker.js": "/movie-library/service-worker.js",
+    "static/css/main.fb05ca73.chunk.css.map": "/movie-library/static/css/main.fb05ca73.chunk.css.map",
+    "static/js/2.368c714f.chunk.js.LICENSE.txt": "/movie-library/static/js/2.368c714f.chunk.js.LICENSE.txt",
+    "static/media/drawerPlaceholder.jpg": "/movie-library/static/media/drawerPlaceholder.84dcb951.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.cba2209a.js",
+    "static/js/2.368c714f.chunk.js",
+    "static/css/main.fb05ca73.chunk.css",
+    "static/js/main.ee349bd5.chunk.js"
+  ]
+}
