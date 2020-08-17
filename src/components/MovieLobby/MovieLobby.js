@@ -2,15 +2,19 @@ import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Carousel from '../MovieCarousel/Carousel';
 import SearchResults from './../SearchResults/SearchResults';
+import {isMobile} from 'react-device-detect';
 
 const useStyles = makeStyles(() => ({
 	lobbyContainer: {
 		color: '#fff',
 		background: '#000',
-		width: '90%',
+		width: isMobile ? '90%' : '95%',
 		margin: 'auto',
-		paddingTop: '8em',
+		paddingTop: isMobile ? '3em' : '8em',
 		height: '1000px'
+	},
+	searchResults: {
+		marginLeft: '2em'
 	}
   }));
 
@@ -53,7 +57,7 @@ const MovieLobby = ({searchResults}) => {
 				<Carousel config={config} type={types.topRated}/>
 				<Carousel config={config} type={types.upcoming}/>
 			</div>}
-			{searchCollection.length && searchCollection && <SearchResults config={config} searchResults={searchCollection} handleCloseResults={handleCloseResults} />}
+			{searchCollection.length && searchCollection && <SearchResults className={classes.searchResults} config={config} searchResults={searchCollection} handleCloseResults={handleCloseResults} />}
 		</div>
 	);
 }

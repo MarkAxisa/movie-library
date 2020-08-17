@@ -3,8 +3,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import SearchButton from './../SearchWidget/SearchButton';
+import {isMobile} from 'react-device-detect';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
 	root: {
 		flexGrow: 1,
 	},
@@ -16,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 		background: 'rgba(0,0,0,0.8)',
 		width: '100%',
 		position: 'fixed',
-		padding: '0 1.5em'
+		padding: isMobile ? '0 1.3em' : '0 1.5em'
 	},
 	searchButton: {
 		position: 'absolute',

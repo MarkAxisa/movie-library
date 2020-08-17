@@ -40,7 +40,8 @@ const CarouselDrawer = ({selectedMovie, apiConfig, onClick}) => {
 			zIndex: '99',
 			'& svg': {
 				fontSize: '1.5em',
-				padding: '0'
+				padding: '0',
+				color: '#fff',
 			}
 		},
 		overview: {

@@ -4,11 +4,11 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import useSearch from './useSearch';
 import useFetchMedia from './../useFetchMedia';
+import {isMobile} from 'react-device-detect';
 
 const SearchWidget = ({isSearchOpen, toggleSearch, searchByTitle, searchByGenre}) => {
 	const [searchOpen, setSearchOpen] = useState(false);
 	const [genres, setGenres] = useState([]);
-
 	const searchInput = useRef(null);
 	const { handleSearchToggle, searchShown} = useSearch();
 	const { handleFetchGenres } = useFetchMedia();
@@ -43,13 +43,13 @@ const SearchWidget = ({isSearchOpen, toggleSearch, searchByTitle, searchByGenre}
 			color: '#fff'
 		},
 		searchInput: {
-			width: '30em',
+			width: '7em',
 			top: '30%',
 			left: '20%',
 			position: 'absolute',
 			background: 'none',
 			border: 'none',
-			fontSize: '6vw',
+			fontSize: isMobile ? '2.5em' : '6vw',
 			color: '#fff',
 			outline: 'none'
 		},
@@ -66,7 +66,8 @@ const SearchWidget = ({isSearchOpen, toggleSearch, searchByTitle, searchByGenre}
 			color: '#fff',
 			padding: '0.5em 1em',
 			cursor: 'pointer',
-			margin: '1em 0.5em'
+			margin: '1em 0.5em',
+			fontSize: '1em'
 		},
 		searchWidgetContainer: {
 			left: '0',
@@ -87,13 +88,13 @@ const SearchWidget = ({isSearchOpen, toggleSearch, searchByTitle, searchByGenre}
 		genreList: {
 			position: 'absolute',
 			margin: 'auto',
-			left: '20%',
+			left: isMobile ? '0' : '20%',
 			paddingRight: '90%',
 			listStyle: 'none',
 			height: '42%',
 			top: '10%',
 			overflowY: 'scroll',
-			fontSize: '4em',
+			fontSize: isMobile ? '3em' : '4em',
 		},
 		genreItem: {
 			cursor: 'pointer',
@@ -123,6 +124,11 @@ const SearchWidget = ({isSearchOpen, toggleSearch, searchByTitle, searchByGenre}
 		}
 	}
 
+	const handleSearchByGenre = (genreId) => {
+		handleSearchToggle(true);
+		searchByGenre(genreId);
+	}
+
 	return (
 		<div className={classes.searchOverlay}>
 			<input className={classes.searchFilters} onClick={() => handleShowSearch(true)} type="button" value="Title"></input>
@@ -137,7 +143,7 @@ const SearchWidget = ({isSearchOpen, toggleSearch, searchByTitle, searchByGenre}
 			<div className={classes.genreSelector}>
 				<ul className={classes.genreList}>
 					{genres.map((genre) => (
-						<li className={classes.genreItem} key={genre.id} onClick={() => searchByGenre(genre.name)} itemID={genre.id}>
+						<li className={classes.genreItem} key={genre.id} onClick={() => {handleSearchByGenre(genre.id)}} itemID={genre.id}>
 							<span>{genre.name}</span>
 						</li>
 					))}

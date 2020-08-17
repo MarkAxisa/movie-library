@@ -31,8 +31,8 @@ const CarouselItem = ({movie, config, toggleDrawer}) => {
 			}
 		},
 		carouselImage: {
-			width: '200px',
-			minHeight: '300px',
+			width: isMobile ? '5em' : '200px',
+			minHeight: isMobile ? '120px' : '300px',
 			outline: !state.drawerClosed && selected ? '5px solid #fff' : 'none',
 			outlineOffset: '-5px',
 			borderRadius: isMobile ? '0.2em': '0'
