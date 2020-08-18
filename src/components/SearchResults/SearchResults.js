@@ -1,8 +1,9 @@
 import React from 'react';
 import Carousel from '../MovieCarousel/Carousel';
 import { makeStyles } from '@material-ui/core/styles';
+import { isMobile } from 'react-device-detect';
 
-const SearchResults = ({config, searchResults, handleCloseResults}) => {
+const SearchResults = ({config, searchResults, handleCloseResults, handleCloseDrawers, drawerChangedFlag}) => {
 
 	const useStyles = makeStyles(() => ({
 		resultsHeader: {
@@ -14,7 +15,7 @@ const SearchResults = ({config, searchResults, handleCloseResults}) => {
 		heading: {
 			left: '2em',
 			position: 'absolute',
-			fontSize: '1.5em'
+			fontSize: isMobile ? '1em' : '1.5em'
 		},
 		clearFiltersButton: {
 			background: 'none',
@@ -23,7 +24,7 @@ const SearchResults = ({config, searchResults, handleCloseResults}) => {
 			padding: '0.5em 1em',
 			cursor: 'pointer',
 			margin: '1em',
-			fontSize: '1em',
+			fontSize: isMobile ? '0.5em' : '1em',
 			right: '4em',
 			position: 'absolute'
 		}
@@ -38,7 +39,7 @@ const SearchResults = ({config, searchResults, handleCloseResults}) => {
 			</div>
 			{searchResults.map((collection, index) => (
 				<div key={index}>
-					<Carousel config={config} collection={collection}/>
+					<Carousel config={config} collection={collection} handleCloseResults={handleCloseResults} handleCloseDrawers={handleCloseDrawers}/>
 				</div>
 			))}
 		</div>

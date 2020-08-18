@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { CarouselContext } from './Carousel';
 import placeholder from '../../assets/images/placeholderImage.jpg';
 
-const CarouselItem = ({movie, config, toggleDrawer}) => {
+const CarouselItem = ({movie, config, toggleDrawer, handleLastDrawerOpened}) => {
 	const [selected, setSelected] = useState(false);
 	const [lastSelected, setlastSelected] = useState(false);
 
@@ -97,7 +97,7 @@ const CarouselItem = ({movie, config, toggleDrawer}) => {
 			setSelected(false);
 		}
 		setlastSelected(false);
-	}, [state.drawerClosed, state.elementSelected, state.elementSelected, lastSelected ]);
+	}, [state.drawerClosed, state.elementSelected]);
 
 	const handleClick = () => {
 		setSelected(true);
@@ -105,6 +105,7 @@ const CarouselItem = ({movie, config, toggleDrawer}) => {
 		dispatch({type: 'UPDATE_DRAWER_STATE', data: false});
 		dispatch({type: 'UPDATE_SELECTED_STATE', data: !state.elementSelected});
 		toggleDrawer(movie);
+		handleLastDrawerOpened();
 	}
 
 	const render = !isMobile ? (
@@ -112,7 +113,7 @@ const CarouselItem = ({movie, config, toggleDrawer}) => {
 			<div className={classes.overlay}></div>
 			<img className={classes.carouselImage} src={config.baseUrl + 'w500' + movie.poster_path} onError={(e)=>{e.target.onerror = null; e.target.src=placeholder}} alt={movie.title} />
 			<p className={classes.title}>{movie.title}</p>
-			<IconButton edge='start' className={classes.drawerIcon} color='inherit' onClick={handleClick} aria-label='menu'>
+			<IconButton edge='start' className={classes.drawerIcon} color='inherit' onClick={()=>{handleClick()}} aria-label='menu'>
 				<KeyboardArrowDownIcon/>
 			</IconButton>
 			<div className={classes.pointer}>

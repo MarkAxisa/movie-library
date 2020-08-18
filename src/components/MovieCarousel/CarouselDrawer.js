@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import CloseIcon from '@material-ui/icons/Close';
+import CancelTwoToneIcon from '@material-ui/icons/CancelTwoTone';
 import IconButton from '@material-ui/core/IconButton';
 import { CarouselContext } from './Carousel';
 import {isMobile} from 'react-device-detect';
@@ -21,7 +21,8 @@ const CarouselDrawer = ({selectedMovie, apiConfig, onClick}) => {
 			zIndex: '50',
 			width: isMobile ? '75%' :'60%',
 			opacity: isMobile ? '0.9' :'1',
-			position: 'absolute'
+			position: 'absolute',
+			padding: isMobile ? '0 1em' : '0 3em'
 		},
 		drawerPoster: {
 			height: '100%',
@@ -30,19 +31,23 @@ const CarouselDrawer = ({selectedMovie, apiConfig, onClick}) => {
 			backgroundImage: selectedMovie ? `url(${apiConfig.baseUrl}w1280${imagePath}), url(${placeholder})` : '',
 			backgroundRepeat: 'no-repeat',
 			position: 'absolute',
-			backgroundPosition: 'center',
 			backgroundSize: 'cover'
 		},
-		carouselClose: {
+		drawerClose: {
 			position: 'absolute',
-			top: '0',
-			right: '0',
+			top: isMobile ? '0.2em' : '0',
+			right: isMobile ? '0.2em' : '1em',
 			zIndex: '99',
 			'& svg': {
-				fontSize: '1.5em',
+				fontSize: isMobile ? '0.2em' : '1.7em',
 				padding: '0',
-				color: '#fff',
-			}
+			},
+			'& svg > path:nth-of-type(1)': {
+				color: '#000'
+			},
+			'& svg > path:nth-of-type(2)': {
+				color: '#fff'
+			},
 		},
 		overview: {
 			width: '80%',
@@ -53,15 +58,15 @@ const CarouselDrawer = ({selectedMovie, apiConfig, onClick}) => {
 	const {state, dispatch} = useContext(CarouselContext);
 	const drawerRef = useRef(null)
 
-	useEffect(() => {
-		if(!state.drawerClosed) {
-			handleDrawerFocus();
-		}
-	}, [state.drawerClosed]);
+	const scrollToRef = () => drawerRef.current?.scrollIntoView({
+		behaviour: 'smooth',
+		block: 'end',
+		inline: 'end'
+	});
 
-	const handleDrawerFocus = () => {
-		window.scrollTo(0, drawerRef.current.offsetTop + drawerRef.current.offsetHeight / 2);
-	}
+	useEffect(() => {
+		scrollToRef();
+	});
 
 	const handleDrawerclose = () => {
 		onClick();
@@ -70,8 +75,8 @@ const CarouselDrawer = ({selectedMovie, apiConfig, onClick}) => {
 
 	const render = selectedMovie ? (
 		<div ref={drawerRef} className={classes.drawer}>
-			<IconButton edge='start' className={classes.carouselClose} onClick={handleDrawerclose} color='inherit' aria-label='menu'>
-				<CloseIcon/>
+			<IconButton edge='start' className={classes.drawerClose} onClick={handleDrawerclose} color='inherit' aria-label='menu'>
+				<CancelTwoToneIcon/>
 			</IconButton>
 			<div className={classes.drawerInfo}>
 				<h3>{selectedMovie.title}</h3>

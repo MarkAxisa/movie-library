@@ -8,7 +8,7 @@ const useStyles = makeStyles(() => ({
 	lobbyContainer: {
 		color: '#fff',
 		background: '#000',
-		width: isMobile ? '90%' : '95%',
+		width: isMobile ? '90%' : '100%',
 		margin: 'auto',
 		paddingTop: isMobile ? '3em' : '8em',
 		height: '1000px'
@@ -22,6 +22,7 @@ const MovieLobby = ({searchResults}) => {
 
 	const [config, setConfig] = useState({});
 	const [searchCollection, setSearchCollection] = useState([]);
+	const [drawerChangedFlag, setDrawerChangedFlag] = useState(true);
 
 	useEffect(() => {
 		if(!config.length) {
@@ -46,18 +47,25 @@ const MovieLobby = ({searchResults}) => {
 	}
 
 	const classes = useStyles();
+
 	const handleCloseResults = () => {
 		setSearchCollection([]);
 	}
+
+	const handleCloseDrawers = () => {
+		setDrawerChangedFlag(!drawerChangedFlag);
+	}
+
 	return (
 		<div className={classes.lobbyContainer}>
 			{!searchCollection.length && <div className={classes.mainLobby}>
-				<Carousel config={config} type={types.popular}/>
-				<Carousel config={config} type={types.nowPlaying}/>
-				<Carousel config={config} type={types.topRated}/>
-				<Carousel config={config} type={types.upcoming}/>
+				<Carousel config={config} type={types.popular} handleCloseDrawers={handleCloseDrawers} drawerChangedFlag={drawerChangedFlag}/>
+				<Carousel config={config} type={types.nowPlaying} handleCloseDrawers={handleCloseDrawers} drawerChangedFlag={drawerChangedFlag}/>
+				<Carousel config={config} type={types.topRated} handleCloseDrawers={handleCloseDrawers} drawerChangedFlag={drawerChangedFlag}/>
+				<Carousel config={config} type={types.upcoming} handleCloseDrawers={handleCloseDrawers} drawerChangedFlag={drawerChangedFlag}/>
 			</div>}
-			{searchCollection.length && searchCollection && <SearchResults className={classes.searchResults} config={config} searchResults={searchCollection} handleCloseResults={handleCloseResults} />}
+			{searchCollection.length && searchCollection && <SearchResults className={classes.searchResults} config={config} searchResults={searchCollection}
+			handleCloseResults={handleCloseResults} handleCloseDrawers={handleCloseDrawers} drawerChangedFlag={drawerChangedFlag}/>}
 		</div>
 	);
 }
