@@ -8,22 +8,33 @@ import useFetchMedia from './../useFetchMedia';
 
 const App = () => {
 
+	const [isMobile, setIsMobile] = useState(undefined);
+	const [isSearchOpen, setSearchOpen] = useState(false);
+	const [searchResults, setSearchResults] = useState([]);
+	const { handleFetchMoviesByTitle, handleFetchMoviesByGenre } = useFetchMedia();
+
 	const useStyles = makeStyles(() => ({
 		app: {
-		font: '#fff',
+			font: '#fff',
 		}
 	}));
 
 	const classes = useStyles();
-	const [isSearchOpen, setSearchOpen] = useState(false);
-	const [searchResults, setSearchResults] = useState([]);
 
-	const { handleFetchMoviesByTitle, handleFetchMoviesByGenre } = useFetchMedia();
+
+	const handleWindowResize = () => {
+		setIsMobile(window.innerWidth <= 500);
+	}
 
 	useEffect(() => {
 		isSearchOpen ?
 		document.body.classList.add('scrollLock') :
 		document.body.classList.remove('scrollLock')
+
+		handleWindowResize();
+		window.addEventListener("resize", handleWindowResize);
+		return () => window.removeEventListener("resize", handleWindowResize);
+
 	}, [isSearchOpen])
 
 	const toggleSearch = () => {
@@ -60,11 +71,21 @@ const App = () => {
 		}).catch(console.error);
 	}
 
+	const disposeSearchResults = () => {
+		setSearchResults([]);
+	}
+
 	return (
 		<div className={classes.app}>
-			<Navbar toggleSearch={toggleSearch}/>
-			<MovieLobby searchResults={searchResults}/>
-			<SearchWidget isSearchOpen={isSearchOpen} toggleSearch={setSearchOpen} searchByTitle={searchByTitle} searchByGenre={searchByGenre}/>
+			<Navbar toggleSearch={toggleSearch} isMobile={isMobile}/>
+			<MovieLobby searchResults={searchResults}
+						disposeSearchResults={disposeSearchResults}
+						isMobile={isMobile}/>
+			<SearchWidget isSearchOpen={isSearchOpen}
+						toggleSearch={setSearchOpen}
+						searchByTitle={searchByTitle}
+						searchByGenre={searchByGenre}
+						isMobile={isMobile}/>
 		</div>
 	);
 }

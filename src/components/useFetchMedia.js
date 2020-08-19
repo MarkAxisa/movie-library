@@ -1,6 +1,10 @@
 const useFetchMedia = () => {
 	const apiKey = 'f22de4bcfe9ad240a4bdeb99b1c5b637';
 
+	const handleFetchConfig = () => {
+		return fetch(`https://api.themoviedb.org/3/configuration?api_key=${apiKey}`);
+	}
+
 	const handleFetchMoviesByType = (type) => {
 		return fetch(`https://api.themoviedb.org/3/movie/${type}?api_key=${apiKey}&language=en-US&page=1`);
 	}
@@ -17,7 +21,7 @@ const useFetchMedia = () => {
 		return fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}&language=en-US`);
 	}
 
-	return { handleFetchMoviesByType, handleFetchMoviesByTitle, handleFetchMoviesByGenre, handleFetchGenres };
+	return { handleFetchConfig, handleFetchMoviesByType, handleFetchMoviesByTitle, handleFetchMoviesByGenre, handleFetchGenres };
 }
 
 export default useFetchMedia

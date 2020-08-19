@@ -1,16 +1,15 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {isMobile} from 'react-device-detect';
 import { useState, useEffect} from 'react'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import IconButton from '@material-ui/core/IconButton';
 import { CarouselContext } from './Carousel';
 import placeholder from '../../assets/images/placeholderImage.jpg';
 
-const CarouselItem = ({movie, config, toggleDrawer, handleLastDrawerOpened}) => {
+const CarouselItem = ({movie, apiConfig, toggleDrawer, handleLastDrawerOpened, isMobile}) => {
+
 	const [selected, setSelected] = useState(false);
 	const [lastSelected, setlastSelected] = useState(false);
-
 	const {state, dispatch} = useContext(CarouselContext);
 
 	const useStyles = makeStyles(() => ({
@@ -31,8 +30,8 @@ const CarouselItem = ({movie, config, toggleDrawer, handleLastDrawerOpened}) => 
 			}
 		},
 		carouselImage: {
-			width: isMobile ? '5em' : '200px',
-			minHeight: isMobile ? '120px' : '300px',
+			width: isMobile ? '6em' : '200px',
+			minHeight: isMobile ? '9em' : '300px',
 			outline: !state.drawerClosed && selected ? '5px solid #fff' : 'none',
 			outlineOffset: '-5px',
 			borderRadius: isMobile ? '0.2em': '0'
@@ -63,7 +62,11 @@ const CarouselItem = ({movie, config, toggleDrawer, handleLastDrawerOpened}) => 
 			zIndex: '100',
 			transition: 'opacity .25s ease-in-out',
 			'& svg': {
-				fontSize: '2em'
+				fontSize: '2em',
+				transition: 'transform 300ms ease 100ms',
+				'&:hover': {
+					transform: 'scale(1.2)',
+				}
 			}
 		},
 		overlay: {
@@ -97,7 +100,7 @@ const CarouselItem = ({movie, config, toggleDrawer, handleLastDrawerOpened}) => 
 			setSelected(false);
 		}
 		setlastSelected(false);
-	}, [state.drawerClosed, state.elementSelected]);
+	}, [state.drawerClosed, state.elementSelected, isMobile]);
 
 	const handleClick = () => {
 		setSelected(true);
@@ -111,7 +114,7 @@ const CarouselItem = ({movie, config, toggleDrawer, handleLastDrawerOpened}) => 
 	const render = !isMobile ? (
 		<div className={classes.carouselItem} >
 			<div className={classes.overlay}></div>
-			<img className={classes.carouselImage} src={config.baseUrl + 'w500' + movie.poster_path} onError={(e)=>{e.target.onerror = null; e.target.src=placeholder}} alt={movie.title} />
+			<img className={classes.carouselImage} src={apiConfig?.baseUrl + 'w500' + movie.poster_path} onError={(e)=>{e.target.onerror = null; e.target.src=placeholder}} alt={movie.title} />
 			<p className={classes.title}>{movie.title}</p>
 			<IconButton edge='start' className={classes.drawerIcon} color='inherit' onClick={()=>{handleClick()}} aria-label='menu'>
 				<KeyboardArrowDownIcon/>
@@ -120,7 +123,7 @@ const CarouselItem = ({movie, config, toggleDrawer, handleLastDrawerOpened}) => 
 			</div>
 		</div>) : (
 			<div className={classes.carouselItem} onClick={handleClick}>
-				<img className={classes.carouselImage} src={config.baseUrl + 'w500' + movie.poster_path} onError={(e)=>{e.target.onerror = null; e.target.src=placeholder}} alt={movie.title}></img>
+				<img className={classes.carouselImage} src={apiConfig?.baseUrl + 'w500' + movie.poster_path} onError={(e)=>{e.target.onerror = null; e.target.src=placeholder}} alt={movie.title}></img>
 			</div>
 		)
 

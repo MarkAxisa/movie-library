@@ -3,10 +3,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import CancelTwoToneIcon from '@material-ui/icons/CancelTwoTone';
 import IconButton from '@material-ui/core/IconButton';
 import { CarouselContext } from './Carousel';
-import {isMobile} from 'react-device-detect';
 import placeholder from '../../assets/images/drawerPlaceholder.jpg';
+import { isMobile } from 'react-device-detect';
 
-const CarouselDrawer = ({selectedMovie, apiConfig, onClick}) => {
+const CarouselDrawer = ({selectedMovie, apiConfig, onClick, isMobile}) => {
 
 	const imagePath = isMobile ? selectedMovie?.poster_path : selectedMovie?.backdrop_path
 
@@ -19,10 +19,13 @@ const CarouselDrawer = ({selectedMovie, apiConfig, onClick}) => {
 			height: '100%',
 			background: 'linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 58%, rgba(0,0,0,0.34807426388524154) 89%, rgba(0,0,0,0) 100%)',
 			zIndex: '50',
-			width: isMobile ? '75%' :'60%',
+			width: isMobile ? '90%' :'60%',
 			opacity: isMobile ? '0.9' :'1',
 			position: 'absolute',
 			padding: isMobile ? '0 1em' : '0 3em'
+		},
+		drawerInfoTitle: {
+			fontSize: isMobile ? '1em': '2em'
 		},
 		drawerPoster: {
 			height: '100%',
@@ -31,6 +34,7 @@ const CarouselDrawer = ({selectedMovie, apiConfig, onClick}) => {
 			backgroundImage: selectedMovie ? `url(${apiConfig.baseUrl}w1280${imagePath}), url(${placeholder})` : '',
 			backgroundRepeat: 'no-repeat',
 			position: 'absolute',
+			backgroundPosition: 'center',
 			backgroundSize: 'cover'
 		},
 		drawerClose: {
@@ -39,7 +43,7 @@ const CarouselDrawer = ({selectedMovie, apiConfig, onClick}) => {
 			right: isMobile ? '0.2em' : '1em',
 			zIndex: '99',
 			'& svg': {
-				fontSize: isMobile ? '0.2em' : '1.7em',
+				fontSize: isMobile ? '1.2em' : '1.7em',
 				padding: '0',
 			},
 			'& svg > path:nth-of-type(1)': {
@@ -51,7 +55,9 @@ const CarouselDrawer = ({selectedMovie, apiConfig, onClick}) => {
 		},
 		overview: {
 			width: '80%',
-			color: '#aba8a8'
+			color: '#aba8a8',
+			height: isMobile ? '42%' :'100%',
+			overflowY: isMobile? 'scroll' : 'hidden'
 		}
 	}));
 	const classes = useStyles();
@@ -61,7 +67,7 @@ const CarouselDrawer = ({selectedMovie, apiConfig, onClick}) => {
 	const scrollToRef = () => drawerRef.current?.scrollIntoView({
 		behaviour: 'smooth',
 		block: 'end',
-		inline: 'end'
+		inline: 'center'
 	});
 
 	useEffect(() => {
@@ -79,12 +85,10 @@ const CarouselDrawer = ({selectedMovie, apiConfig, onClick}) => {
 				<CancelTwoToneIcon/>
 			</IconButton>
 			<div className={classes.drawerInfo}>
-				<h3>{selectedMovie.title}</h3>
+				<h3 className={classes.drawerInfoTitle}>{selectedMovie.title}</h3>
 				<p className={classes.overview}>{selectedMovie.overview}</p>
 			</div>
-			<div className={classes.drawerPoster} >
-
-			</div>
+			<div className={classes.drawerPoster}></div>
 		</div>
 	) : null;
 

@@ -2,54 +2,41 @@ import React, {useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Carousel from '../MovieCarousel/Carousel';
 import SearchResults from './../SearchResults/SearchResults';
-import {isMobile} from 'react-device-detect';
 
-const useStyles = makeStyles(() => ({
-	lobbyContainer: {
-		color: '#fff',
-		background: '#000',
-		width: isMobile ? '90%' : '100%',
-		margin: 'auto',
-		paddingTop: isMobile ? '3em' : '8em',
-		height: '1000px'
-	},
-	searchResults: {
-		marginLeft: '2em'
-	}
-  }));
+const MovieLobby = ({searchResults, disposeSearchResults, isMobile}) => {
 
-const MovieLobby = ({searchResults}) => {
-
-	const [config, setConfig] = useState({});
 	const [searchCollection, setSearchCollection] = useState([]);
 	const [drawerChangedFlag, setDrawerChangedFlag] = useState(true);
+	const types = [
+		'Popular',
+		'Now Playing',
+		'Top Rated',
+		'Upcoming'
+	]
 
 	useEffect(() => {
-		if(!config.length) {
-			fetch('https://api.themoviedb.org/3/configuration?api_key=f22de4bcfe9ad240a4bdeb99b1c5b637')
-			.then(res => res.json())
-			.then((data) => {
-			  setConfig({baseUrl: data.images.secure_base_url})
-			})
-			.catch(console.log)
-		}
 		if(searchResults) {
 			setSearchCollection(searchResults);
 		}
-	}, [searchResults, config.length])
+	}, [searchResults, isMobile, drawerChangedFlag])
 
-	const types = {
-		popular: 'popular',
-		latest: 'latest',
-		nowPlaying: 'now_playing',
-		topRated: 'top_rated',
-		upcoming: 'upcoming'
-	}
-
+	const useStyles = makeStyles(() => ({
+		lobbyContainer: {
+			color: '#fff',
+			background: '#000',
+			width: isMobile ? '90%' : '100%',
+			margin: 'auto',
+			padding: isMobile ? '3.2em 0' : '8em 0',
+			height: '100%'
+		},
+		searchResults: {
+			marginLeft: '2em'
+		}
+	}));
 	const classes = useStyles();
 
 	const handleCloseResults = () => {
-		setSearchCollection([]);
+		disposeSearchResults()
 	}
 
 	const handleCloseDrawers = () => {
@@ -59,13 +46,21 @@ const MovieLobby = ({searchResults}) => {
 	return (
 		<div className={classes.lobbyContainer}>
 			{!searchCollection.length && <div className={classes.mainLobby}>
-				<Carousel config={config} type={types.popular} handleCloseDrawers={handleCloseDrawers} drawerChangedFlag={drawerChangedFlag}/>
-				<Carousel config={config} type={types.nowPlaying} handleCloseDrawers={handleCloseDrawers} drawerChangedFlag={drawerChangedFlag}/>
-				<Carousel config={config} type={types.topRated} handleCloseDrawers={handleCloseDrawers} drawerChangedFlag={drawerChangedFlag}/>
-				<Carousel config={config} type={types.upcoming} handleCloseDrawers={handleCloseDrawers} drawerChangedFlag={drawerChangedFlag}/>
+			{types.map((type) => (
+				<Carousel key={type.replace(' ', '')} type={type}
+						handleCloseDrawers={handleCloseDrawers}
+						drawerChangedFlag={drawerChangedFlag}
+						isMobile={isMobile}/>
+			))}
 			</div>}
-			{searchCollection.length && searchCollection && <SearchResults className={classes.searchResults} config={config} searchResults={searchCollection}
-			handleCloseResults={handleCloseResults} handleCloseDrawers={handleCloseDrawers} drawerChangedFlag={drawerChangedFlag}/>}
+			{searchCollection.length > 0 &&
+				<SearchResults className={classes.searchResults}
+								searchResults={searchCollection}
+								handleCloseResults={handleCloseResults}
+								handleCloseDrawers={handleCloseDrawers}
+								drawerChangedFlag={drawerChangedFlag}
+								isMobile={isMobile}/>
+			}
 		</div>
 	);
 }

@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useReducer, useRef } from 'react'
-import {isMobile} from 'react-device-detect';
 import { makeStyles } from '@material-ui/core/styles';
 import CarouselItem from './CarouselItem';
 import CarouselButton from './CarouselButton';
@@ -11,7 +10,7 @@ import useFetchMedia from './../useFetchMedia';
 
 export const CarouselContext = React.createContext();
 
-const Carousel = ({config, type, collection, handleCloseDrawers, drawerChangedFlag}) => {
+const Carousel = ({type, collection, handleCloseDrawers, drawerChangedFlag, isMobile}) => {
 
 	const initialState = {
 		drawerClosed: true,
@@ -34,17 +33,27 @@ const Carousel = ({config, type, collection, handleCloseDrawers, drawerChangedFl
 		}
 	}
 
+	const [apiConfig, setApiConfig] = useState(undefined);
+	const [isDevice, setIsDevice] = useState(false);
 	const [movies, setMovies] = useState([]);
 	const [state, dispatch] = useReducer(reducer, initialState);
 	const [isFirstLoad, setIsFirstLoad] = useState(true);
 	const [isLastDrawerOpened, setIsLastDrawerOpened] = useState(false);
 	const { width, elementRef } = useSizeElement();
-	const { handleFetchMoviesByType } = useFetchMedia();
+	const { handleFetchConfig, handleFetchMoviesByType } = useFetchMedia();
 	const { handleToggle, open, selectedMovie } = useToggleDrawer();
 	const carouselRef = useRef(null)
+
 	useEffect(() => {
+		if(!apiConfig) {
+			handleApiConfig();
+		}
+
+		setIsDevice(isMobile);
+
 		if(!movies.length && !collection) {
-			handleFetchMoviesByType(type)
+			let movieType = type.replace(' ', '_').toLowerCase();
+			handleFetchMoviesByType(movieType)
 			.then(res => res.json())
 			.then((data) => {
 				//Shuffling of Movies
@@ -67,8 +76,9 @@ const Carousel = ({config, type, collection, handleCloseDrawers, drawerChangedFl
 		if(state.drawerClosed && !isFirstLoad) {
 			handleCarouselFocus();
 		}
+
 		setIsFirstLoad(false);
-	}, [collection, drawerChangedFlag])
+	}, [collection, drawerChangedFlag, isMobile])
 
 	const {
 		handlePrev,
@@ -82,36 +92,35 @@ const Carousel = ({config, type, collection, handleCloseDrawers, drawerChangedFl
 
 	const useStyles = makeStyles(() => ({
 		carouselContainer: {
-			transition: 'transform 300ms ease 100ms',
 			position: 'relative',
 			overflow: 'hidden',
 			width: '100%',
-			padding: isMobile ? '0' : '4em 0',
-			margin: isMobile ? '0' : '-4em 0',
+			padding: isDevice ? '0' : '4em 0',
+			margin: isDevice ? '0' : '-4em 0',
 			'&:hover': {
 				zIndex: '100'
 			}
 		},
 		carousel: {
-			display: isMobile ? 'flex': 'block',
-			width: isMobile ? '100%' : `${carouselWidth}px`,
-			textAlign: isMobile ? 'left' : 'center',
+			display: isDevice ? 'flex': 'block',
+			width: isDevice ? '100%' : `${carouselWidth}px`,
+			textAlign: isDevice ? 'left' : 'center',
 			background: '#000',
-			padding: isMobile ? '0.5em 0' : '1em 0',
+			padding: isDevice ? '0.5em 0' : '1em 0',
 			transition: 'transform 300ms ease 100ms',
-			overflowX: isMobile ? 'scroll': 'visible',
-			overflowY: isMobile ? 'hidden': 'visible',
-			minHeight: isMobile ? '5em' : '14em'
+			overflowX: isDevice ? 'scroll': 'visible',
+			overflowY: isDevice ? 'hidden': 'visible',
+			minHeight: isDevice ? '5em' : '14em'
 		},
 		initialContainer: {
 			position: 'absolute'
 		},
 		carouselTitle: {
-			margin: isMobile ? '0.5em 0 0 0' : '0.5em 0 0 2em',
-			position: isMobile ? 'initial' : 'absolute',
-			top: isMobile ? '0' : '1em',
+			margin: isDevice ? '0' : '0.5em 0 0 2em',
+			position: isDevice ? 'initial' : 'absolute',
+			top: isDevice ? '0' : '1em',
 			zIndex: '100',
-			fontSize: isMobile ? '1em' : '1.5em'
+			fontSize: isDevice ? '1.3em' : '1.5em'
 		},
 		carouselGradient: {
 			position: 'absolute',
@@ -130,18 +139,18 @@ const Carousel = ({config, type, collection, handleCloseDrawers, drawerChangedFl
 		carouselDrawer: {
 			transition: 'transform 300ms ease 100ms',
 			height: '600px',
-			transform: state.drawerClosed ? 'scaleY(0)' : 'scaleY(1)',
-			display: state.drawerClosed ? 'none' : 'block'
+			display: state.drawerClosed ? 'none' : 'block',
+			transform: state.drawerClosed ? 'scaleY(0)' : 'scaleY(1)'
 		},
 		movieContainer: {
-			minWidth: isMobile ? 'none' : '200px',
-			paddingRight: isMobile ? '0.4em': '2px',
+			minWidth: isDevice ? 'none' : '200px',
+			paddingRight: isDevice ? '0.4em': '2px',
 			transition: 'all 700ms',
 			display: 'inline-block',
 			transitionDelay: state.drawerClosed ? '0.4s' : '0',
 			'&:hover': {
-				margin: state.drawerClosed && !isMobile ? '0 calc(200px * 0.25)' : '0',
-				transform: state.drawerClosed && !isMobile ? 'scale(1.5)' : 'none'
+				margin: state.drawerClosed && !isDevice ? '0 calc(200px * 0.25)' : '0',
+				transform: state.drawerClosed && !isDevice ? 'scale(1.5)' : 'none'
 			}
 		}
 	}));
@@ -152,6 +161,15 @@ const Carousel = ({config, type, collection, handleCloseDrawers, drawerChangedFl
 		window.scrollTo(0, carouselRef.current.offsetTop);
 	}
 
+	const handleApiConfig = () => {
+		handleFetchConfig()
+		.then(res => res.json())
+		.then((data) => {
+			setApiConfig({baseUrl: data.images.secure_base_url});
+		})
+		.catch(console.log)
+	}
+
 	const handleLastDrawerOpened = () => {
 		setIsLastDrawerOpened(true);
 		handleCloseDrawers();
@@ -159,13 +177,17 @@ const Carousel = ({config, type, collection, handleCloseDrawers, drawerChangedFl
 
 	return (
 		<div ref={containerRef} className={classes.carouselContainer}>
-			{!collection && <p className={classes.carouselTitle}>Latest</p>}
+			{!collection && <p className={classes.carouselTitle}>{type.replace('_','')}</p>}
 				<CarouselContext.Provider value={{state, dispatch}}>
 					<div ref={carouselRef} className={classes.carousel} {...slideAnimation}>
 						<div ref={elementRef} className={[classes.movieContainer, classes.initialContainer].join(' ')}></div>
 						{movies.map((movie) => (
 							<div key={movie.id} className={classes.movieContainer}>
-								<CarouselItem movie={movie} config={config} toggleDrawer={handleToggle} handleLastDrawerOpened={handleLastDrawerOpened} />
+								<CarouselItem movie={movie} 
+											apiConfig={apiConfig}
+											toggleDrawer={handleToggle}
+											handleLastDrawerOpened={handleLastDrawerOpened}
+											isMobile={isMobile}/>
 							</div>
 						))}
 					</div>
@@ -176,7 +198,10 @@ const Carousel = ({config, type, collection, handleCloseDrawers, drawerChangedFl
 						{hasPrev && !open && <CarouselButton onClick={handlePrev} type="Prev"/>}
 					</div>}
 					<div className={classes.carouselDrawer} >
-						<CarouselDrawer selectedMovie={selectedMovie} apiConfig={config} onClick={handleToggle} />
+						<CarouselDrawer selectedMovie={selectedMovie}
+										apiConfig={apiConfig}
+										onClick={handleToggle}
+										isMobile={isMobile}/>
 					</div>
 				</CarouselContext.Provider>
 		</div>

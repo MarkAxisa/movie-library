@@ -4,9 +4,8 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import useSearch from './useSearch';
 import useFetchMedia from './../useFetchMedia';
-import {isMobile} from 'react-device-detect';
 
-const SearchWidget = ({isSearchOpen, toggleSearch, searchByTitle, searchByGenre}) => {
+const SearchWidget = ({isSearchOpen, toggleSearch, searchByTitle, searchByGenre, isMobile}) => {
 	const [searchOpen, setSearchOpen] = useState(false);
 	const [genres, setGenres] = useState([]);
 	const searchInput = useRef(null);
@@ -57,7 +56,7 @@ const SearchWidget = ({isSearchOpen, toggleSearch, searchByTitle, searchByGenre}
 			position: 'absolute',
 			right: '0',
 			"& svg": {
-				fontSize: '2em'
+				fontSize: isMobile ? '1.5em' : '2em'
 			}
 		},
 		searchFilters: {
