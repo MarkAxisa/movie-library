@@ -1,6 +1,6 @@
 ## Overview
 
-During the development of this application, I gave a lot of focus to design.<br/>
+During the development of this application, I focused a lot on design.<br/>
 To me, design in an application makes all the difference and is what defines a great app.<br/>
 Most of the development time was spent working on the 'Carousel' component,<br/>
 which makes up most of the UI. My goal was to create a simple yet attractive UI that is<br />
@@ -37,6 +37,6 @@ than just logging said error.
 
 ### Mobile Styling Defect
 
-When testing on the dev emulator, intermittently there seems to be some sort of overflow on the X-axis.<br/>
-I tested it with multiple devices on which I could not replicate. I tried investigating it but unfortunately<br/>
-I discovered It quite late.
+When testing on the dev emulator, intermittently there seems to be some sort of overflow on the X-axis of the body,<br/>
+even though I have overflow-x set to hidden. I tested it with multiple devices on which I could not replicate.<br/>
+I tried investigating it but unfortunately I discovered It quite late.
