@@ -41,7 +41,7 @@ const Carousel = ({type, media, label, collection, handleCloseDrawers, drawerCha
 	const [isLastDrawerOpened, setIsLastDrawerOpened] = useState(false);
 	const { width, elementRef } = useSizeElement();
 	const { handleFetchConfig, handleFetchMoviesByType } = useFetchMedia();
-	const { handleToggle, open, selectedMovie } = useToggleDrawer();
+	const { handleToggle, selectedMovie } = useToggleDrawer();
 	const carouselRef = useRef(null)
 
 	useEffect(() => {
@@ -196,10 +196,10 @@ const Carousel = ({type, media, label, collection, handleCloseDrawers, drawerCha
 						))}
 					</div>
 					{!isMobile && <div className={[classes.carouselGradient, classes.carouselGradientRight].join(' ')}>
-						{hasNext && !open && <CarouselButton onClick={handleNext} type="Next"/>}
+						{hasNext && state.drawerClosed && <CarouselButton onClick={handleNext} type="Next"/>}
 					</div>}
 					{!isMobile &&<div className={[classes.carouselGradient, classes.carouselGradientLeft].join(' ')}>
-						{hasPrev && !open && <CarouselButton onClick={handlePrev} type="Prev"/>}
+						{hasPrev && state.drawerClosed && <CarouselButton onClick={handlePrev} type="Prev"/>}
 					</div>}
 					<div className={classes.carouselDrawer} >
 						<CarouselDrawer selectedMovie={selectedMovie}
