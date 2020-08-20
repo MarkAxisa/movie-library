@@ -41,7 +41,7 @@ const Navbar = ({toggleSearch, isMobile}) => {
 		<div className={classes.root}>
 			<AppBar className={classes.appBar}>
 				<Toolbar className={classes.toolbar}>
-					<a className={classes.title} href="#">Media Library</a>
+					<a className={classes.title} href="#">Movie Library</a>
 					<div className={classes.searchButton}>
 						<SearchButton toggleSearch={toggleSearch}/>
 					</div>

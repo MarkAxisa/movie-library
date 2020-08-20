@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useRef} from 'react';
+import React, { useContext, useEffect, useRef,} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import CancelTwoToneIcon from '@material-ui/icons/CancelTwoTone';
 import IconButton from '@material-ui/core/IconButton';
 import { CarouselContext } from './Carousel';
 import placeholder from '../../assets/images/drawerPlaceholder.jpg';
-import { isMobile } from 'react-device-detect';
 
-const CarouselDrawer = ({selectedMovie, apiConfig, onClick, isMobile}) => {
+const CarouselDrawer = ({selectedMovie, apiConfig, onClick, isMobile, isDrawerOpen}) => {
 
 	const imagePath = isMobile ? selectedMovie?.poster_path : selectedMovie?.backdrop_path
 
@@ -71,7 +70,9 @@ const CarouselDrawer = ({selectedMovie, apiConfig, onClick, isMobile}) => {
 	});
 
 	useEffect(() => {
-		scrollToRef();
+		if(isDrawerOpen) {
+			scrollToRef();
+		}
 	});
 
 	const handleDrawerclose = () => {

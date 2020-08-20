@@ -10,7 +10,7 @@ import useFetchMedia from './../useFetchMedia';
 
 export const CarouselContext = React.createContext();
 
-const Carousel = ({type, collection, handleCloseDrawers, drawerChangedFlag, isMobile}) => {
+const Carousel = ({type, media, label, collection, handleCloseDrawers, drawerChangedFlag, isMobile}) => {
 
 	const initialState = {
 		drawerClosed: true,
@@ -53,14 +53,16 @@ const Carousel = ({type, collection, handleCloseDrawers, drawerChangedFlag, isMo
 
 		if(!movies.length && !collection) {
 			let movieType = type.replace(' ', '_').toLowerCase();
-			handleFetchMoviesByType(movieType)
+			handleFetchMoviesByType(movieType, media)
 			.then(res => res.json())
-			.then((data) => {
+			.then(data => {
 				//Shuffling of Movies
 				let movies = data.results.sort(() => Math.random() - 0.5);
 				setMovies(movies);
 			})
-			.catch(console.log);
+			.catch(error => {
+				console.log(error.status_message)
+			});
 		}
 
 		if(collection) {
@@ -164,10 +166,12 @@ const Carousel = ({type, collection, handleCloseDrawers, drawerChangedFlag, isMo
 	const handleApiConfig = () => {
 		handleFetchConfig()
 		.then(res => res.json())
-		.then((data) => {
+		.then(data => {
 			setApiConfig({baseUrl: data.images.secure_base_url});
 		})
-		.catch(console.log)
+		.catch(error => {
+			console.log(error.status_message)
+		});
 	}
 
 	const handleLastDrawerOpened = () => {
@@ -177,11 +181,11 @@ const Carousel = ({type, collection, handleCloseDrawers, drawerChangedFlag, isMo
 
 	return (
 		<div ref={containerRef} className={classes.carouselContainer}>
-			{!collection && <p className={classes.carouselTitle}>{type.replace('_','')}</p>}
+			{!collection && <p className={classes.carouselTitle}>{label}</p>}
 				<CarouselContext.Provider value={{state, dispatch}}>
 					<div ref={carouselRef} className={classes.carousel} {...slideAnimation}>
 						<div ref={elementRef} className={[classes.movieContainer, classes.initialContainer].join(' ')}></div>
-						{movies.map((movie) => (
+						{movies.map(movie => (
 							<div key={movie.id} className={classes.movieContainer}>
 								<CarouselItem movie={movie} 
 											apiConfig={apiConfig}
@@ -201,7 +205,8 @@ const Carousel = ({type, collection, handleCloseDrawers, drawerChangedFlag, isMo
 						<CarouselDrawer selectedMovie={selectedMovie}
 										apiConfig={apiConfig}
 										onClick={handleToggle}
-										isMobile={isMobile}/>
+										isMobile={isMobile}
+										isDrawerOpen={!state.drawerClosed}/>
 					</div>
 				</CarouselContext.Provider>
 		</div>

@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import './App.css';
 import Navbar from './../Navbar/Navbar';
 import { makeStyles } from '@material-ui/core/styles';
 import MovieLobby from '../MovieLobby/MovieLobby';
 import SearchWidget from './../SearchWidget/SearchWidget';
 import useFetchMedia from './../useFetchMedia';
+import Footer from '../Footer/Footer';
 
 const App = () => {
 
@@ -23,7 +23,7 @@ const App = () => {
 
 
 	const handleWindowResize = () => {
-		setIsMobile(window.innerWidth <= 500);
+		setIsMobile(window.innerWidth <= 768);
 	}
 
 	useEffect(() => {
@@ -59,7 +59,9 @@ const App = () => {
 		.then((res) => res.json())
 		.then((data) => {
 			sliceData(data);
-		}).catch(console.error);
+		}).catch(error => {
+			console.log(error.status_message)
+		});
 	}
 
 	const searchByGenre = (genre) => {
@@ -68,7 +70,9 @@ const App = () => {
 		.then((res) => res.json())
 		.then((data) => {
 			sliceData(data);
-		}).catch(console.error);
+		}).catch(error => {
+			console.log(error.status_message)
+		});
 	}
 
 	const disposeSearchResults = () => {
@@ -86,6 +90,7 @@ const App = () => {
 						searchByTitle={searchByTitle}
 						searchByGenre={searchByGenre}
 						isMobile={isMobile}/>
+			<Footer isMobile={isMobile}/>
 		</div>
 	);
 }

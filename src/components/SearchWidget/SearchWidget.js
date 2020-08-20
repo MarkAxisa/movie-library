@@ -16,10 +16,12 @@ const SearchWidget = ({isSearchOpen, toggleSearch, searchByTitle, searchByGenre,
 		if(!genres.length) {
 			handleFetchGenres()
 			.then(res => res.json())
-			.then((data) => {
+			.then(data => {
 				setGenres(data['genres']);
 			})
-			.catch(console.log);
+			.catch(error => {
+				console.log(error.status_message)
+			});
 		}
 		setSearchOpen(isSearchOpen);
 		searchInput.current.focus();
@@ -44,13 +46,16 @@ const SearchWidget = ({isSearchOpen, toggleSearch, searchByTitle, searchByGenre,
 		searchInput: {
 			width: '7em',
 			top: '30%',
-			left: '20%',
+			left: isMobile ? '0' : '20%',
+			right: '0',
+			margin: isMobile ? 'auto' : 'unset',
 			position: 'absolute',
 			background: 'none',
 			border: 'none',
 			fontSize: isMobile ? '2.5em' : '6vw',
 			color: '#fff',
-			outline: 'none'
+			outline: 'none',
+			display: isSearchOpen && searchShown ? 'block' : 'none'
 		},
 		searchClose: {
 			position: 'absolute',
@@ -66,7 +71,8 @@ const SearchWidget = ({isSearchOpen, toggleSearch, searchByTitle, searchByGenre,
 			padding: '0.5em 1em',
 			cursor: 'pointer',
 			margin: '1em 0.5em',
-			fontSize: '1em'
+			fontSize: '1em',
+			outline: 'none'
 		},
 		searchWidgetContainer: {
 			left: '0',
@@ -141,7 +147,7 @@ const SearchWidget = ({isSearchOpen, toggleSearch, searchByTitle, searchByGenre,
 			</div>
 			<div className={classes.genreSelector}>
 				<ul className={classes.genreList}>
-					{genres.map((genre) => (
+					{genres.map(genre => (
 						<li className={classes.genreItem} key={genre.id} onClick={() => {handleSearchByGenre(genre.id)}} itemID={genre.id}>
 							<span>{genre.name}</span>
 						</li>

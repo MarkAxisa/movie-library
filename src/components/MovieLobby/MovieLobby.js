@@ -8,11 +8,47 @@ const MovieLobby = ({searchResults, disposeSearchResults, isMobile}) => {
 	const [searchCollection, setSearchCollection] = useState([]);
 	const [drawerChangedFlag, setDrawerChangedFlag] = useState(true);
 	const types = [
-		'Popular',
-		'Now Playing',
-		'Top Rated',
-		'Upcoming'
-	]
+		{
+			label: 'Popular Movies',
+			apiSegment: 'popular',
+			media: 'movie'
+		},
+		{
+			label: 'Movies Now Playing',
+			apiSegment: 'now_playing',
+			media: 'movie'
+		},
+		{
+			label: 'Top Rated Movies',
+			apiSegment: 'top_rated',
+			media: 'movie'
+		},
+		{
+			label: 'Upcoming Movies',
+			apiSegment: 'upcoming',
+			media: 'movie'
+		},
+		{
+			label: 'Popular Shows',
+			apiSegment: 'popular',
+			media: 'tv'
+		},
+		{
+			label: 'On The Air',
+			apiSegment: 'on_the_air',
+			media: 'tv'
+		},
+		{
+			label: 'Airing Today',
+			apiSegment: 'airing_today',
+			media: 'tv'
+		},
+		{
+			label: 'Top Rated Shows',
+			apiSegment: 'top_rated',
+			media: 'tv'
+		},
+	];
 
 	useEffect(() => {
 		if(searchResults) {
@@ -26,7 +62,9 @@ const MovieLobby = ({searchResults, disposeSearchResults, isMobile}) => {
 			background: '#000',
 			width: isMobile ? '90%' : '100%',
 			margin: 'auto',
-			padding: isMobile ? '3.2em 0' : '8em 0',
+			minHeight: '90vh',
+			paddingTop: isMobile ? '3.2em' : '8em',
+			paddingBottom: isMobile ? '0.5em': '3em',
 			height: '100%'
 		},
 		searchResults: {
@@ -46,8 +84,11 @@ const MovieLobby = ({searchResults, disposeSearchResults, isMobile}) => {
 	return (
 		<div className={classes.lobbyContainer}>
 			{!searchCollection.length && <div className={classes.mainLobby}>
-			{types.map((type) => (
-				<Carousel key={type.replace(' ', '')} type={type}
+			{types.map(type => (
+				<Carousel key={`${type.media}_${type.apiSegment}`}
+						type={type.apiSegment}
+						media={type.media}
+						label={type.label}
 						handleCloseDrawers={handleCloseDrawers}
 						drawerChangedFlag={drawerChangedFlag}
 						isMobile={isMobile}/>

@@ -1,68 +1,42 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+During the development of this application, I gave a lot of focus to design.<br/>
+To me, design in an application makes all the difference and is what defines a great app.<br/>
+Most of the development time was spent working on the 'Carousel' component,<br/>
+which makes up most of the UI. My goal was to create a simple yet attractive UI that is<br />
+easily scalable across different devices, and that is why I went with the Carousel approach.
 
-In the project directory, you can run:
+## Possible Improvements
 
-### `yarn start`
+### ViewPort Resizing Approach
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+I would use an 'AppContext' in the APP component and rather than passing the prop<br/>
+'isMobile' in every component I needed it, I would have it exposed throughout my entire application.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### Proper Handling For Empty Results
 
-### `yarn test`
+Rather than simply closing the search widget and showing the user the regular lobby,<br/>
+I could possibly dispatch a notification so as to make it clear to the user that no results were found.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Single Responsibility For App Component
 
-### `yarn build`
+I would decouple the search logic from the App component. The App component should be<br/>
+nothing more than a shell component and should not contain any unrelated logic.<br/>
+I would possibly move this logic inside the 'useSearch'
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Better Component Structuring
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+Some components are to granular. An example of this is the 'CarouselButton' component.<br/>
+This was created early on in the application and eventually I started splitting in a<br/>
+more sensical way.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Proper Error Handling
 
-### `yarn eject`
+I would implement proper error feedback whenever an error is returned from API rather<br/>
+than just logging said error.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Mobile Styling Defect
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+When testing on the dev emulator, intermittently there seems to be some sort of overflow on the X-axis.<br/>
+I tested it with multiple devices on which I could not replicate. I tried investigating it but unfortunately<br/>
+I discovered It quite late.

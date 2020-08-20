@@ -5,8 +5,8 @@ const useFetchMedia = () => {
 		return fetch(`https://api.themoviedb.org/3/configuration?api_key=${apiKey}`);
 	}
 
-	const handleFetchMoviesByType = (type) => {
-		return fetch(`https://api.themoviedb.org/3/movie/${type}?api_key=${apiKey}&language=en-US&page=1`);
+	const handleFetchMoviesByType = (type, media) => {
+		return fetch(`https://api.themoviedb.org/3/${media}/${type}?api_key=${apiKey}&language=en-US&page=1`);
 	}
 
 	const handleFetchMoviesByTitle = (query) => {

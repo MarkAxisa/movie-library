@@ -114,7 +114,7 @@ const CarouselItem = ({movie, apiConfig, toggleDrawer, handleLastDrawerOpened, i
 	const render = !isMobile ? (
 		<div className={classes.carouselItem} >
 			<div className={classes.overlay}></div>
-			<img className={classes.carouselImage} src={apiConfig?.baseUrl + 'w500' + movie.poster_path} onError={(e)=>{e.target.onerror = null; e.target.src=placeholder}} alt={movie.title} />
+			<img className={classes.carouselImage} src={apiConfig ? apiConfig.baseUrl + 'w185' + movie.poster_path : ''} onError={(e)=>{e.target.onerror = null; e.target.src=placeholder}} alt={movie.title} />
 			<p className={classes.title}>{movie.title}</p>
 			<IconButton edge='start' className={classes.drawerIcon} color='inherit' onClick={()=>{handleClick()}} aria-label='menu'>
 				<KeyboardArrowDownIcon/>
@@ -123,7 +123,7 @@ const CarouselItem = ({movie, apiConfig, toggleDrawer, handleLastDrawerOpened, i
 			</div>
 		</div>) : (
 			<div className={classes.carouselItem} onClick={handleClick}>
-				<img className={classes.carouselImage} src={apiConfig?.baseUrl + 'w500' + movie.poster_path} onError={(e)=>{e.target.onerror = null; e.target.src=placeholder}} alt={movie.title}></img>
+				<img className={classes.carouselImage} src={apiConfig? apiConfig.baseUrl + 'w185' + movie.poster_path: ''} onError={(e)=>{e.target.onerror = null; e.target.src=placeholder}} alt={movie.title}></img>
 			</div>
 		)
 
